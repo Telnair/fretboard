@@ -1,6 +1,6 @@
 import React from 'react';
 import { Note, SelectedNote, Scale } from './types';
-import { notes, scales, defaultGuitarRoots } from './consts';
+import { notes, scales, defaultGuitarRoots, frets_options, strings_options, default_strings_number } from './consts';
 import { scaleToLabel } from './helpers';
 
 interface SettingsProps {
@@ -14,6 +14,8 @@ interface SettingsProps {
   onSetIsLeftHanded: () => void;
   roots: Note[];
   onSetRoots: (newRoots: Note[]) => void;
+  onSetStrings: (strings: number) => void;
+  strings: number;
 }
 
 export const Settings: React.FC<SettingsProps> = ({
@@ -27,12 +29,14 @@ export const Settings: React.FC<SettingsProps> = ({
   onSetRoots,
   onSetSelectedScale,
   selectedScale,
+  onSetStrings,
+  strings,
 }) => {
   return (
     <div className="settings">
       <div className="settings__checkbox">
         <div className="settings-field">Left-handed mode:</div>
-        <input type="checkbox" checked={isLeftHanded} onChange={onSetIsLeftHanded} />
+        <input type="checkbox" style={{ width: 16, height: 16 }} checked={isLeftHanded} onChange={onSetIsLeftHanded} />
       </div>
       <div className="settings__scale">
         <div className="settings__scale-root">
@@ -55,15 +59,23 @@ export const Settings: React.FC<SettingsProps> = ({
       <div className="settings__frets">
         <div className="settings-field">Frets:</div>
         <select value={frets} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetFrets(+e.currentTarget.value)}>
-          {Array(24).fill(null).map((_, id) => (
-            <option key={id} value={id + 1}>{id + 1}</option>
+          {frets_options.map((id) => (
+            <option key={id} value={id}>{id}</option>
+          ))}
+        </select>
+      </div>
+      <div className="settings__frets">
+        <div className="settings-field">Strings:</div>
+        <select value={strings} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetStrings(+e.currentTarget.value)}>
+          {strings_options.map((id) => (
+            <option key={id} value={id}>{id}</option>
           ))}
         </select>
       </div>
       <div className="settings__tuning">
         <div className="settings-field">Tuning:</div>
         <div style={{ direction: 'rtl' }}>
-          {roots.map((rootNote, id) => (
+          {roots.slice(default_strings_number - strings).map((rootNote, id) => (
             <select value={rootNote} key={rootNote + id} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetRoots(roots.map((r, idx) => idx === id ? e.currentTarget.value as Note : r))}>
               {notes.map((root, id) => (
                 <option key={root + id} value={root}>{root}</option>

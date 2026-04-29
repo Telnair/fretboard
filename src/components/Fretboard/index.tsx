@@ -3,7 +3,7 @@ import './styles.css';
 import { Note, IFretboard, SelectedNote, Scale } from './types';
 import { String } from './String';
 import { FretNumbers } from './FretNumbers';
-import { notes, defaultGuitarRoots, scales } from './consts';
+import { notes, defaultGuitarRoots, scales, default_strings_number } from './consts';
 import { Settings } from './Settings';
 
 
@@ -44,6 +44,7 @@ export const Fretboard: React.FC = () => {
   const [ roots, setRoots ] = useState<Note[]>(defaultGuitarRoots);
   const [ isLeftHanded, setIsLeftHanded ] = useState<boolean>(false);
   const [ isSettingsPopupOpen, setIsSettingsPopupOpen ] = useState(false);
+  const [ strings, setStrings ] = useState(default_strings_number);
 
   const handleSetLeftHanded = () => setIsLeftHanded(prev => !prev);
 
@@ -71,13 +72,15 @@ export const Fretboard: React.FC = () => {
             onSetIsLeftHanded={handleSetLeftHanded}
             roots={roots}
             onSetRoots={setRoots}
+            strings={strings}
+            onSetStrings={setStrings}
           />
         ) : null}
       </div>
       <div className={`fretboard ${isLeftHanded ? 'left-handed' : ''}`}>
         <div className="frets-label">{isLeftHanded ? 'Frets ←' : 'Frets →'}</div>
         <FretNumbers frets={frets} />
-        {roots.map((root, id) =>
+        {roots.slice(default_strings_number - strings).map((root, id) =>
           <String
             stringNum={id + 1}
             stringRoot={root}
