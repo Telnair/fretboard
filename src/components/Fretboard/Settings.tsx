@@ -1,6 +1,7 @@
 import React from 'react';
 import { Note, SelectedNote, Scale } from './types';
 import { notes, scales, defaultGuitarRoots } from './consts';
+import { scaleToLabel } from './helpers';
 
 interface SettingsProps {
   scaleRoot: Note;
@@ -30,7 +31,7 @@ export const Settings: React.FC<SettingsProps> = ({
   return (
     <div className="settings">
       <div className="settings__checkbox">
-        <div className="settings-field">Left-handed mode: <span>{isLeftHanded ? 'ON' : 'OFF'}</span></div>
+        <div className="settings-field">Left-handed mode:</div>
         <input type="checkbox" checked={isLeftHanded} onChange={onSetIsLeftHanded} />
       </div>
       <div className="settings__scale">
@@ -46,7 +47,7 @@ export const Settings: React.FC<SettingsProps> = ({
           <div className="settings-field">Scale:</div>
           <select value={selectedScale} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetSelectedScale(e.currentTarget.value as Scale)}>
             {Object.keys(scales).map(scale => (
-              <option key={scale} value={scale}>{scale}</option>
+              <option key={scale} value={scale}>{scaleToLabel[scale as Scale]}</option>
             ))}
           </select>
         </div>

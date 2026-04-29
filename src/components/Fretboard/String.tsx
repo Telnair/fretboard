@@ -6,12 +6,13 @@ interface String {
   string: Note[];
   scaleRoot: Note;
   selectedScaleNotes: Note[];
+  stringNum: number;
 }
 
-export const String: React.FC<String> = ({ stringRoot, string, scaleRoot, selectedScaleNotes }) => {
+export const String: React.FC<String> = ({ stringRoot, string, scaleRoot, selectedScaleNotes, stringNum }) => {
   return (
     <section className="string">
-      <div className={`string-number ${selectedScaleNotes.indexOf(stringRoot) !== -1 ? 'selected' : ''}`}>{stringRoot}</div>
+      <div className={`string-note ${selectedScaleNotes.indexOf(stringRoot) !== -1 ? 'selected' : ''}`}>{stringRoot}</div>
       <div className="frets">
         {string.map((fret, id) =>
           <div
@@ -21,6 +22,7 @@ export const String: React.FC<String> = ({ stringRoot, string, scaleRoot, select
             {fret}
           </div>)}
       </div>
+      <div className="string-number">{stringNum}</div>
     </section>
   );
 }
