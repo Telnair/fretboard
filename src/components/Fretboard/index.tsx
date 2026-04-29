@@ -40,10 +40,10 @@ export const Fretboard: React.FC = () => {
 
   const [ scaleRoot, setScaleRoot ] = useState<Note>(Note.A);
   const [ frets, setFrets ] = useState<number>(12);
-  const [ selectedNote, setSelectedNote ] = useState<SelectedNote>(null);
   const [ selectedScale, setSelectedScale ] = useState<Scale>('pentatonicMinor');
   const [ roots, setRoots ] = useState<Note[]>(defaultGuitarRoots);
-  const [ isLeftHanded, setIsLeftHanded ] = useState<boolean>(false);
+  const [ isLeftHanded, setIsLeftHanded ] = useState<boolean>(true);
+  const [ isSettingsPopupOpen, setIsSettingsPopupOpen ] = useState(false);
 
   const handleSetLeftHanded = () => setIsLeftHanded(prev => !prev);
 
@@ -51,32 +51,35 @@ export const Fretboard: React.FC = () => {
 
   return (
     <>
+      <h1 className="title">Guitar Fretboard Map</h1>
       <div className={`fretboard ${isLeftHanded ? 'left-handed' : ''}`}>
+        <div className="frets-label">{isLeftHanded ? 'Frets ←' : 'Frets →'}</div>
         <FretNumbers frets={frets} />
         {roots.map((root, id) =>
           <String
             stringRoot={root}
-            selectedScale={selectedScale}
             selectedScaleNotes={createNoteRange(scaleRoot, scales[selectedScale])}
             scaleRoot={scaleRoot}
             key={id}
-            selectedNote={selectedNote}
             string={fretboard[id]}
-            onSetSelectedNote={setSelectedNote}
           />)}
+          <FretNumbers frets={frets} />
+          <div className="open-strings-label">↑ <br /> Open Strings</div>
       </div>
-      <Settings
-        scaleRoot={scaleRoot}
-        onSetScaleRoot={setScaleRoot}
-        frets={frets}
-        onSetFrets={setFrets}
-        onSetSelectedScale={setSelectedScale}
-        selectedScale={selectedScale}
-        isLeftHanded={isLeftHanded}
-        onSetIsLeftHanded={handleSetLeftHanded}
-        roots={roots}
-        onSetRoots={setRoots}
-      />
+      {isSettingsPopupOpen ? (
+        <Settings
+          scaleRoot={scaleRoot}
+          onSetScaleRoot={setScaleRoot}
+          frets={frets}
+          onSetFrets={setFrets}
+          onSetSelectedScale={setSelectedScale}
+          selectedScale={selectedScale}
+          isLeftHanded={isLeftHanded}
+          onSetIsLeftHanded={handleSetLeftHanded}
+          roots={roots}
+          onSetRoots={setRoots}
+        />
+      ) : null}
     </>
   );
 }

@@ -1,12 +1,60 @@
+.title {
+  font-size: 52px;
+  text-align: center;
+  color: darkgoldenrod;
+  margin-bottom: 64px;
+  font-family: Fascinate, sans-serif;
+}
+
 .fretboard {
   display: block;
-  background: #ffffb3;
   border: #331a00;
-  width: 80vw;
+  width: 85vw;
   position: relative;
-  margin: 50px auto;
-  border-radius: 12px;
+  margin: 0 auto;
   padding-bottom: 10px;
+}
+
+.fretboard:after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  top: 104px;
+  bottom: 123px;
+  left: 1px;
+  background-color: saddlebrown;
+}
+
+.fretboard.left-handed:after {
+  left: unset;
+  right: 1px;
+}
+
+.frets-label {
+  position: absolute;
+  top: 32px;
+  left: -45px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.fretboard.left-handed .frets-label {
+  left: unset;
+  right: -45px;
+}
+
+.open-strings-label {
+  position: absolute;
+  bottom: 25px;
+  left: -60px;
+  width: 60px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.fretboard.left-handed .open-strings-label {
+  left: unset;
+  right: -60px;
 }
 
 @media screen and (max-width: 900px) {
@@ -46,17 +94,13 @@
 }
 
 .fret-numbers {
-  background: #996600;
-  color: #fff2cc;
+  color: #333;
   display: flex;
   justify-content: space-around;
-  height: 50px;
+  height: 80px;
   align-items: center;
   font-size: 18px;
-  margin-bottom: 15px;
   padding: 10px 20px;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
 }
 
 @media screen and (max-width: 900px) {
@@ -75,11 +119,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #fff2cc;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.fret-number-accented {
+  background-color: goldenrod;
 }
 
 .string {
   position: relative;
   padding: 0 20px;
+}
+
+.string:nth-of-type(1) .frets::after {
+  height: 1px;
+}
+
+.string:nth-of-type(2) .frets::after {
+  height: 1.5px;
+}
+
+.string:nth-of-type(3) .frets::after {
+  height: 2px;
+}
+
+.string:nth-of-type(4) .frets::after {
+  height: 2.5px;
+}
+
+.string:nth-of-type(5) .frets::after {
+  height: 3px;
+}
+
+.string:nth-of-type(6) .frets::after {
+  height: 3.5px;
 }
 
 @media screen and (max-width: 900px) {
@@ -89,11 +164,22 @@
 } 
 
 .string-number {
-  background: #ffffb3;
+  border: 2px solid goldenrod;
+  background: #fff2cc;
   position: absolute;
-  top: 5px;
   font-size: 18px;
-  padding: 10px;
+  height: 40px;
+  width: 40px;
+  top: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.2;
+}
+
+.string-number.selected {
+  opacity: 1;
 }
 
 @media screen and (max-width: 900px) {
@@ -122,7 +208,7 @@
   transform: translateY(-50%);
   height: 2px;
   right: -10px;
-  background: brown;
+  background: saddlebrown;
   opacity: 0.3;
 }
 
@@ -137,8 +223,9 @@
 }
 
 .fret {
-  color: #fff2cc;
-  background: #ac7339;
+  color: #111;
+  font-weight: 700;
+  background: #fff2cc;
   height: 50px;
   width: 50px;
   border-radius: 50%;
@@ -148,6 +235,8 @@
   position: relative;
   z-index: 10;
   opacity: 0.1;
+  border: 3px solid goldenrod;
+  font-size: 18px;
 }
 
 @media screen and (max-width: 900px) {
@@ -163,7 +252,7 @@
 }
 
 .fret.root {
-  background: #4d3400;
+  background: goldenrod;
 }
 
 .settings {
