@@ -37,13 +37,18 @@ export const Settings: React.FC<SettingsProps> = ({
       <div className="settings__tuning">
         <div className="settings-field">Tuning:</div>
         <div style={{ direction: 'rtl' }}>
-          {roots.slice(default_strings_number - strings).map((rootNote, id) => (
-            <select value={rootNote} key={rootNote + id} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetRoots(roots.map((r, idx) => idx === id ? e.currentTarget.value as Note : r))}>
-              {notes.map((root, id) => (
-                <option key={root + id} value={root}>{root}</option>
-              ))}
-            </select>
-          ))}
+          {roots.map((rootNote, id) => {
+            const minId = default_strings_number - strings;
+            if (id < minId) return null;
+
+            return (
+              <select value={rootNote} key={rootNote + id} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetRoots(roots.map((r, idx) => idx === id ? e.currentTarget.value as Note : r))}>
+                {notes.map((root, id) => (
+                  <option key={root + id} value={root}>{root}</option>
+                ))}
+              </select>
+            )
+          })}
         </div>
       </div>
       <div className="settings__scale">

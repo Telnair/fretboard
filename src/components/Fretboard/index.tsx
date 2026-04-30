@@ -54,15 +54,21 @@ export const Fretboard: React.FC = () => {
       <div className={`fretboard ${isLeftHanded ? 'left-handed' : ''}`}>
         <div className="frets-label">{isLeftHanded ? 'Frets ←' : 'Frets →'}</div>
         <FretNumbers frets={frets} />
-        {roots.slice(default_strings_number - strings).map((root, id) =>
-          <String
-            stringNum={id + 1}
-            stringRoot={root}
-            selectedScaleNotes={createNoteRange(scaleRoot, scales[selectedScale])}
-            scaleRoot={scaleRoot}
-            key={id}
-            string={fretboard[id]}
-          />)}
+        {roots.map((root, id) => {
+          const minId = default_strings_number - strings;
+          if (id < minId) return null;
+ 
+          return (
+            <String
+              stringNum={id + 1}
+              stringRoot={root}
+              selectedScaleNotes={createNoteRange(scaleRoot, scales[selectedScale])}
+              scaleRoot={scaleRoot}
+              key={id}
+              string={fretboard[id]}
+            />
+          );
+        })}
           <FretNumbers frets={frets} />
           <div className="open-strings-label">↑ <br /> Open Strings</div>
       </div>
