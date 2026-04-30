@@ -43,7 +43,6 @@ export const Fretboard: React.FC = () => {
   const [ selectedScale, setSelectedScale ] = useState<Scale>('pentatonicMinor');
   const [ roots, setRoots ] = useState<Note[]>(defaultGuitarRoots);
   const [ isLeftHanded, setIsLeftHanded ] = useState<boolean>(false);
-  const [ isSettingsPopupOpen, setIsSettingsPopupOpen ] = useState(false);
   const [ strings, setStrings ] = useState(default_strings_number);
 
   const handleSetLeftHanded = () => setIsLeftHanded(prev => !prev);
@@ -52,31 +51,6 @@ export const Fretboard: React.FC = () => {
 
   return (
     <>
-      <h1 className="title">Guitar Fretboard Map</h1>
-      <div className="settings-section">
-        <button 
-          className={`settings-button ${isSettingsPopupOpen ? 'open' : ''}`} 
-          onClick={() => setIsSettingsPopupOpen(!isSettingsPopupOpen)}
-        >
-          {isSettingsPopupOpen ? 'Close' : 'Open'} Settings
-        </button>
-        {isSettingsPopupOpen ? (
-          <Settings
-            scaleRoot={scaleRoot}
-            onSetScaleRoot={setScaleRoot}
-            frets={frets}
-            onSetFrets={setFrets}
-            onSetSelectedScale={setSelectedScale}
-            selectedScale={selectedScale}
-            isLeftHanded={isLeftHanded}
-            onSetIsLeftHanded={handleSetLeftHanded}
-            roots={roots}
-            onSetRoots={setRoots}
-            strings={strings}
-            onSetStrings={setStrings}
-          />
-        ) : null}
-      </div>
       <div className={`fretboard ${isLeftHanded ? 'left-handed' : ''}`}>
         <div className="frets-label">{isLeftHanded ? 'Frets ←' : 'Frets →'}</div>
         <FretNumbers frets={frets} />
@@ -92,6 +66,20 @@ export const Fretboard: React.FC = () => {
           <FretNumbers frets={frets} />
           <div className="open-strings-label">↑ <br /> Open Strings</div>
       </div>
+      <Settings
+        scaleRoot={scaleRoot}
+        onSetScaleRoot={setScaleRoot}
+        frets={frets}
+        onSetFrets={setFrets}
+        onSetSelectedScale={setSelectedScale}
+        selectedScale={selectedScale}
+        isLeftHanded={isLeftHanded}
+        onSetIsLeftHanded={handleSetLeftHanded}
+        roots={roots}
+        onSetRoots={setRoots}
+        strings={strings}
+        onSetStrings={setStrings}
+      />
     </>
   );
 }

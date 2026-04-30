@@ -34,44 +34,6 @@ export const Settings: React.FC<SettingsProps> = ({
 }) => {
   return (
     <div className="settings">
-      <div className="settings__checkbox">
-        <div className="settings-field">Left-handed mode:</div>
-        <input type="checkbox" style={{ width: 16, height: 16 }} checked={isLeftHanded} onChange={onSetIsLeftHanded} />
-      </div>
-      <div className="settings__scale">
-        <div className="settings__scale-root">
-          <div className="settings-field">Root note:</div>
-          <select value={scaleRoot} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetScaleRoot(e.currentTarget.value as Note)}>
-            {notes.map(note => (
-              <option key={note} value={note}>{note}</option>
-            ))}
-          </select>
-        </div>
-        <div className="settings__scale-type">
-          <div className="settings-field">Scale:</div>
-          <select value={selectedScale} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetSelectedScale(e.currentTarget.value as Scale)}>
-            {Object.keys(scales).map(scale => (
-              <option key={scale} value={scale}>{scaleToLabel[scale as Scale]}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="settings__frets">
-        <div className="settings-field">Frets:</div>
-        <select value={frets} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetFrets(+e.currentTarget.value)}>
-          {frets_options.map((id) => (
-            <option key={id} value={id}>{id}</option>
-          ))}
-        </select>
-      </div>
-      <div className="settings__frets">
-        <div className="settings-field">Strings:</div>
-        <select value={strings} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetStrings(+e.currentTarget.value)}>
-          {strings_options.map((id) => (
-            <option key={id} value={id}>{id}</option>
-          ))}
-        </select>
-      </div>
       <div className="settings__tuning">
         <div className="settings-field">Tuning:</div>
         <div style={{ direction: 'rtl' }}>
@@ -83,6 +45,38 @@ export const Settings: React.FC<SettingsProps> = ({
             </select>
           ))}
         </div>
+      </div>
+      <div className="settings__scale">
+        <div className="settings__scale-root">
+          <div className="settings-field">Scale / Root:</div>
+          <select value={selectedScale} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetSelectedScale(e.currentTarget.value as Scale)}>
+            {Object.keys(scales).map(scale => (
+              <option key={scale} value={scale}>{scaleToLabel[scale as Scale]}</option>
+            ))}
+          </select>
+          <select value={scaleRoot} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetScaleRoot(e.currentTarget.value as Note)}>
+            {notes.map(note => (
+              <option key={note} value={note}>{note}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="settings__frets">
+        <div className="settings-field">Frets / Strings:</div>
+        <select value={frets} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetFrets(+e.currentTarget.value)}>
+          {frets_options.map((id) => (
+            <option key={id} value={id}>{id}</option>
+          ))}
+        </select>
+        <select value={strings} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetStrings(+e.currentTarget.value)}>
+          {strings_options.map((id) => (
+            <option key={id} value={id}>{id}</option>
+          ))}
+        </select>
+      </div>
+      <div className="settings__checkbox">
+        <div className="settings-field">LH mode:</div>
+        <input type="checkbox" style={{ width: 17, height: 17 }} checked={isLeftHanded} onChange={onSetIsLeftHanded} />
       </div>
     </div>
   );
