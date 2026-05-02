@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import './styles.css';
-import { Note, IFretboard, SelectedNote, Scale } from './types';
 import { String } from './String';
 import { FretNumbers } from './FretNumbers';
-import { notes, defaultGuitarRoots, scales, default_strings_number } from './consts';
+import { notes, defaultGuitarRoots, scales, defaultStringsNumber, IFretboard, Note, Scale, scaleToDefaultRoot } from './utils';
 import { Settings } from './Settings';
 
 
@@ -43,19 +42,24 @@ export const Fretboard: React.FC = () => {
   const [ selectedScale, setSelectedScale ] = useState<Scale>('pentatonicMinor');
   const [ roots, setRoots ] = useState<Note[]>(defaultGuitarRoots);
   const [ isLeftHanded, setIsLeftHanded ] = useState<boolean>(false);
-  const [ strings, setStrings ] = useState(default_strings_number);
+  const [ strings, setStrings ] = useState(defaultStringsNumber);
 
   const handleSetLeftHanded = () => setIsLeftHanded(prev => !prev);
 
   const fretboard = createFretboard(roots, frets);
 
+  const handleSetSelectedScale = (scale: Scale) => {
+    setSelectedScale(scale);
+    setScaleRoot(scaleToDefaultRoot[scale]);
+  };
+
   return (
-    <>
+    <div className="root" style={{ height: window?.innerHeight }}>
       <div className={`fretboard ${isLeftHanded ? 'left-handed' : ''}`}>
         <div className="frets-label">{isLeftHanded ? 'Frets ←' : 'Frets →'}</div>
         <FretNumbers frets={frets} />
         {roots.map((root, id) => {
-          const minId = default_strings_number - strings;
+          const minId = defaultStringsNumber - strings;
           if (id < minId) return null;
  
           return (
@@ -77,7 +81,7 @@ export const Fretboard: React.FC = () => {
         onSetScaleRoot={setScaleRoot}
         frets={frets}
         onSetFrets={setFrets}
-        onSetSelectedScale={setSelectedScale}
+        onSetSelectedScale={handleSetSelectedScale}
         selectedScale={selectedScale}
         isLeftHanded={isLeftHanded}
         onSetIsLeftHanded={handleSetLeftHanded}
@@ -86,6 +90,6 @@ export const Fretboard: React.FC = () => {
         strings={strings}
         onSetStrings={setStrings}
       />
-    </>
+    </div>
   );
 }

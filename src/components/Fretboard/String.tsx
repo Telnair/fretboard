@@ -1,5 +1,5 @@
 import React from 'react';
-import { Note, SelectedNote, Scale } from './types';
+import { Note } from './utils';
 
 interface String {
   stringRoot: Note;
@@ -12,7 +12,9 @@ interface String {
 export const String: React.FC<String> = ({ stringRoot, string, scaleRoot, selectedScaleNotes, stringNum }) => {
   return (
     <section className="string">
-      <div className={`string-note ${selectedScaleNotes.indexOf(stringRoot) !== -1 ? 'selected' : ''}`}>{stringRoot}</div>
+      <div className={`string-note ${selectedScaleNotes.indexOf(stringRoot) !== -1 ? 'selected' : ''} ${scaleRoot === stringRoot ? 'root' : ''}`}>
+        {stringRoot}
+      </div>
       <div className="frets">
         {string.map((fret, id) =>
           <div
