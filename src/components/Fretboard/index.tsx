@@ -1,40 +1,25 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './styles.css';
 import { String } from './String';
 import { FretNumbers } from './FretNumbers';
-import { notes, defaultGuitarRoots, scales, defaultStringsNumber, IFretboard, Note, Scale, scaleToDefaultRoot } from './utils';
+import {
+  buildChromaticRange,
+  buildScaleNotes,
+  defaultGuitarRoots,
+  defaultStringsNumber,
+  IFretboard,
+  Note,
+  Scale,
+  scales,
+  scaleToDefaultRoot,
+} from './utils';
 import { Settings } from './Settings';
 
 
 
 export const Fretboard: React.FC = () => {
-  const getNoteByInterval = (note: Note, interval: number): Note => {
-    const dir = interval < 0 ? 'desc' : 'asc';
-    const noteReducer = (fn: (note: Note) => Note) => Array(Math.abs(interval * 2)).fill(null).reduce(fn, note);
-    return dir === 'asc' ? noteReducer(getNextNote) : noteReducer(getPrevNote);
-  };
-
-  const getNextNote = (note: Note): Note => {
-    const noteIdx = notes.indexOf(note);
-    return notes[noteIdx >= notes.length - 1 ? 0 : noteIdx + 1];
-  };
-
-  const getPrevNote = (note: Note): Note => {
-    const noteIdx = notes.indexOf(note);
-    return notes[noteIdx === 0 ? notes.length - 1 : noteIdx - 1];
-  };
-
-  const createNoteRange = (rootNote: Note, range: number[]): Note[] => {
-    let currentRoot = rootNote;
-    return range.map((interval) => {
-      const note = getNoteByInterval(currentRoot, interval)
-      currentRoot = note;
-      return note;
-    });
-  };
-
   const createFretboard = (strings: Note[], frets: number): IFretboard => {
-    return strings.map(rootNote => createNoteRange(rootNote, Array(frets).fill(0.5)));
+    return strings.map((rootNote) => buildChromaticRange(rootNote, frets));
   };
 
   const [ scaleRoot, setScaleRoot ] = useState<Note>(Note.A);
@@ -47,6 +32,10 @@ export const Fretboard: React.FC = () => {
   const handleSetLeftHanded = () => setIsLeftHanded(prev => !prev);
 
   const fretboard = createFretboard(roots, frets);
+  const selectedScaleNotes = useMemo(
+    () => buildScaleNotes(scaleRoot, scales[selectedScale]),
+    [scaleRoot, selectedScale],
+  );
 
   const handleSetSelectedScale = (scale: Scale) => {
     setSelectedScale(scale);
@@ -66,7 +55,7 @@ export const Fretboard: React.FC = () => {
             <String
               stringNum={id + 1}
               stringRoot={root}
-              selectedScaleNotes={createNoteRange(scaleRoot, scales[selectedScale])}
+              selectedScaleNotes={selectedScaleNotes}
               scaleRoot={scaleRoot}
               key={id}
               string={fretboard[id]}
