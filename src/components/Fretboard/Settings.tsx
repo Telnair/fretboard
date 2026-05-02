@@ -1,5 +1,15 @@
 import React from 'react';
-import { notes, scales, fretsOptions, stringsNumberOptions, defaultStringsNumber, Note, Scale, scaleToLabel } from './utils';
+import {
+  notes,
+  scales,
+  fretsOptions,
+  stringsNumberOptions,
+  defaultStringsNumber,
+  Note,
+  Scale,
+  scaleToLabel,
+  type PopularChord,
+} from './utils';
 
 interface SettingsProps {
   scaleRoot: Note;
@@ -14,6 +24,10 @@ interface SettingsProps {
   onSetRoots: (newRoots: Note[]) => void;
   onSetStrings: (strings: number) => void;
   strings: number;
+  popularChords: PopularChord[];
+  selectedChordId: string | null;
+  onSetSelectedChordId: (id: string | null) => void;
+  chordMode: boolean;
 }
 
 export const Settings: React.FC<SettingsProps> = ({
@@ -29,25 +43,45 @@ export const Settings: React.FC<SettingsProps> = ({
   selectedScale,
   onSetStrings,
   strings,
+  popularChords,
+  selectedChordId,
+  onSetSelectedChordId,
+  chordMode,
 }) => {
   return (
     <div className="settings">
-      <div className="settings__scale">
+      <div className="settings__chord">
+        <div className="settings-field">Chord:</div>
+        <select
+          aria-label="Chord highlight"
+          value={selectedChordId ?? ''}
+          onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => {
+            const v = e.currentTarget.value;
+            onSetSelectedChordId(v === '' ? null : v);
+          }}
+        >
+          <option value="">None</option>
+          {popularChords.map((c) => (
+            <option key={c.id} value={c.id}>{c.label}</option>
+          ))}
+        </select>
+      </div>
+      <div className={`settings__scale ${chordMode ? 'settings--muted' : ''}`}>
         <div className="settings__scale-root">
           <div className="settings-field">Scale / Root:</div>
-          <select value={selectedScale} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetSelectedScale(e.currentTarget.value as Scale)}>
+          <select aria-label="Scale type" disabled={chordMode} value={selectedScale} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetSelectedScale(e.currentTarget.value as Scale)}>
             {Object.keys(scales).map(scale => (
               <option key={scale} value={scale}>{scaleToLabel[scale as Scale]}</option>
             ))}
           </select>
-          <select value={scaleRoot} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetScaleRoot(e.currentTarget.value as Note)}>
+          <select aria-label="Scale root note" disabled={chordMode} value={scaleRoot} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetScaleRoot(e.currentTarget.value as Note)}>
             {notes.map(note => (
               <option key={note} value={note}>{note}</option>
             ))}
           </select>
         </div>
       </div>
-      <div className="settings__tuning">
+      <div className={`settings__tuning ${chordMode ? 'settings--muted' : ''}`}>
         <div className="settings-field">Tuning:</div>
         <div style={{ direction: 'rtl' }}>
           {roots.map((rootNote, id) => {
@@ -55,7 +89,7 @@ export const Settings: React.FC<SettingsProps> = ({
             if (id < minId) return null;
 
             return (
-              <select value={rootNote} key={rootNote + id} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetRoots(roots.map((r, idx) => idx === id ? e.currentTarget.value as Note : r))}>
+              <select disabled={chordMode} value={rootNote} key={rootNote + id} onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => onSetRoots(roots.map((r, idx) => idx === id ? e.currentTarget.value as Note : r))}>
                 {notes.map((root, id) => (
                   <option key={root + id} value={root}>{root}</option>
                 ))}

@@ -19,10 +19,14 @@ describe('Settings scale selection', () => {
         onSetRoots={mock()}
         onSetStrings={mock()}
         strings={6}
+        popularChords={[]}
+        selectedChordId={null}
+        onSetSelectedChordId={mock()}
+        chordMode={false}
       />,
     );
 
-    const scaleSelect = screen.getAllByRole('combobox')[0];
+    const scaleSelect = screen.getByRole('combobox', { name: 'Scale type' });
     const options = scaleSelect.querySelectorAll('option');
 
     expect(options.length).toBe(Object.keys(scales).length);
@@ -50,10 +54,14 @@ describe('Settings scale selection', () => {
         onSetRoots={mock()}
         onSetStrings={mock()}
         strings={6}
+        popularChords={[]}
+        selectedChordId={null}
+        onSetSelectedChordId={mock()}
+        chordMode={false}
       />,
     );
 
-    fireEvent.change(screen.getAllByRole('combobox')[0], {
+    fireEvent.change(screen.getByRole('combobox', { name: 'Scale type' }), {
       target: { value: 'hirajoshi' },
     });
 

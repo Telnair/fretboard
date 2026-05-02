@@ -300,6 +300,19 @@
   background: goldenrod;
 }
 
+.settings__chord {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings--muted {
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
+}
+
 .settings {
   width: 390px;
   margin: 0 auto;

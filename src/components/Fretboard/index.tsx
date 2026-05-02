@@ -5,10 +5,12 @@ import { FretNumbers } from './FretNumbers';
 import {
   buildChromaticRange,
   buildScaleNotes,
+  chordFingeringMaskForString,
   defaultGuitarRoots,
   defaultStringsNumber,
-  IFretboard,
+  getPrimaryChordVoicing,
   Note,
+  POPULAR_GUITAR_CHORDS,
   Scale,
   scales,
   scaleToDefaultRoot,
@@ -18,28 +20,43 @@ import { Settings } from './Settings';
 
 
 export const Fretboard: React.FC = () => {
-  const createFretboard = (strings: Note[], frets: number): IFretboard => {
-    return strings.map((rootNote) => buildChromaticRange(rootNote, frets));
-  };
-
   const [ scaleRoot, setScaleRoot ] = useState<Note>(Note.A);
   const [ frets, setFrets ] = useState<number>(12);
   const [ selectedScale, setSelectedScale ] = useState<Scale>('pentatonicMinor');
   const [ roots, setRoots ] = useState<Note[]>(defaultGuitarRoots);
   const [ isLeftHanded, setIsLeftHanded ] = useState<boolean>(false);
   const [ strings, setStrings ] = useState(defaultStringsNumber);
+  const [ selectedChordId, setSelectedChordId ] = useState<string | null>(null);
 
   const handleSetLeftHanded = () => setIsLeftHanded(prev => !prev);
 
-  const fretboard = createFretboard(roots, frets);
   const selectedScaleNotes = useMemo(
     () => buildScaleNotes(scaleRoot, scales[selectedScale]),
     [scaleRoot, selectedScale],
   );
 
+  const selectedChord = useMemo(
+    () => POPULAR_GUITAR_CHORDS.find((c) => c.id === selectedChordId) ?? null,
+    [selectedChordId],
+  );
+
+  const primaryChordVoicing = useMemo(
+    () => (selectedChord ? getPrimaryChordVoicing(selectedChord) : null),
+    [selectedChord],
+  );
+
+  // When a chord is selected the fretboard renders as standard EADGBE regardless of tuning.
+  const chordMode = primaryChordVoicing !== null;
+  const effectiveRoots = chordMode ? defaultGuitarRoots : roots;
+  const effectiveFretboard = useMemo(
+    () => effectiveRoots.map((r) => buildChromaticRange(r, frets)),
+    [effectiveRoots, frets],
+  );
+
   const handleSetSelectedScale = (scale: Scale) => {
     setSelectedScale(scale);
     setScaleRoot(scaleToDefaultRoot[scale]);
+    setSelectedChordId(null);
   };
 
   return (
@@ -47,7 +64,7 @@ export const Fretboard: React.FC = () => {
       <div className={`fretboard ${isLeftHanded ? 'left-handed' : ''}`}>
         <div className="frets-label">{isLeftHanded ? 'Frets ←' : 'Frets →'}</div>
         <FretNumbers frets={frets} />
-        {roots.map((root, id) => {
+        {effectiveRoots.map((root, id) => {
           const minId = defaultStringsNumber - strings;
           if (id < minId) return null;
  
@@ -58,7 +75,13 @@ export const Fretboard: React.FC = () => {
               selectedScaleNotes={selectedScaleNotes}
               scaleRoot={scaleRoot}
               key={id}
-              string={fretboard[id]}
+              string={effectiveFretboard[id]}
+              chordMode={chordMode}
+              chordMask={
+                chordMode && primaryChordVoicing
+                  ? chordFingeringMaskForString(primaryChordVoicing, id, frets)
+                  : null
+              }
             />
           );
         })}
@@ -78,6 +101,10 @@ export const Fretboard: React.FC = () => {
         onSetRoots={setRoots}
         strings={strings}
         onSetStrings={setStrings}
+        popularChords={POPULAR_GUITAR_CHORDS}
+        selectedChordId={selectedChordId}
+        onSetSelectedChordId={setSelectedChordId}
+        chordMode={chordMode}
       />
     </div>
   );
