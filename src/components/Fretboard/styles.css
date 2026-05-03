@@ -222,6 +222,7 @@
     padding: 0;
     height: 20px;
     width: 20px;
+    border-width: 1px;
   }
   .string-number {
     font-size: 12px;
@@ -380,4 +381,13 @@
 .settings__tuning select {
   width: 36px;
   margin-left: 6px;
+}
+
+.settings__clear {
+  cursor: pointer;
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #ececec;
+  padding: 0 8px;
 }

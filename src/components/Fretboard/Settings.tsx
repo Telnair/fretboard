@@ -52,7 +52,9 @@ export const Settings: React.FC<SettingsProps> = ({
     <div className="settings">
       <div className="settings__chord">
         <div className="settings-field">Chord:</div>
+        {selectedChordId ? <div className="settings__clear" onClick={() => onSetSelectedChordId(null)}>X</div> : null}
         <select
+          style={{ marginLeft: 0 }}
           aria-label="Chord highlight"
           value={selectedChordId ?? ''}
           onChange={(e: React.SyntheticEvent<HTMLSelectElement>) => {

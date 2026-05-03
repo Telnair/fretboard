@@ -21,7 +21,7 @@ export const defaultStringsNumber = 6;
 
 export const stringsNumberOptions = [4, 5, 6];
 
-export const fretsOptions = [12, 15, 18, 22, 24];
+export const fretsOptions = [7, 10, 12, 15, 18, 20, 22, 24];
 
 export const accentedFrets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
 
